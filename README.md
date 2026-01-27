@@ -1,5 +1,5 @@
 <!-- # <u>IN</u>ternal <u>S</u>ignal <u>P</u>robing and <u>E</u>valua<u>T</u>ion <u>O</u>f <u>R</u>epresentations (INSPECTOR) -->
-# Representaion-as-a-Judge
+# Representation-as-a-judge
 
 Repo for the paper: "[Rethinking LLM-as-a-Judge: Representation-as-a-Judge with Small Language Models via Semantic Capacity Asymmetry](https://openreview.net/pdf?id=VAISvCsrvG)", accepted by ICLR 2026.
 ![Overview of our INSPECTOR method.](assets/Representation-as-a-Judge.png)
@@ -60,7 +60,7 @@ results = evaluate_samples(samples, clf_root='gsm8k_multi_clfs', batch_size=16, 
 # ]
 ```
 
-- The input format is a json file containing similar pairs as above, e.g. [Meta-Llama-3-8B-Instruct_gsm8k_results.json](Meta-Llama-3-8B-Instruct_gsm8k_results.json). This will produce a evaluated json file, e.g. [Meta-Llama-3-8B-Instruct_gsm8k_results_Qwen3-1.7B_multi_evaled.json](Meta-Llama-3-8B-Instruct_gsm8k_results_Qwen3-1.7B_multi_evaled.json)
+- The input format is a json file containing similar pairs as above, e.g. [Meta-Llama-3-8B-Instruct_gsm8k_results.json](Meta-Llama-3-8B-Instruct_gsm8k_results.json). This will produce an evaluated json file named like: `Meta-Llama-3-8B-Instruct_gsm8k_results_Qwen3-1.7B_multi_evaled.json`.
 ```
 python quick_eval.py --clf_root 'gsm8k_multi_clfs' --batch_size 16 --file_path 'Meta-Llama-3-8B-Instruct_math_results.json' --top_percent 1.0
 ```
