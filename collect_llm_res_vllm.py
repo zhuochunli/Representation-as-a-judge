@@ -5,7 +5,6 @@ from tqdm import tqdm
 from vllm import LLM, SamplingParams
 from utils import split_sample, my_load_dataset, build_prompt
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "2,3,4,5,6,7"
 
 parser = argparse.ArgumentParser(description='vLLM Batch Inference',
                                  formatter_class=argparse.RawTextHelpFormatter)

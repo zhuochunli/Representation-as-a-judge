@@ -13,15 +13,13 @@ import pickle
 parser = argparse.ArgumentParser(description="Filter data using a trained classifier.")
 parser.add_argument('--clf_root', type=str, required=True, help='Path to classifier pickle root')
 parser.add_argument('--batch_size', '-bs', default=16, type=int, help="batch size")
-parser.add_argument('--file_path', type=str, required=True, help='Path to results JSON file')
+parser.add_argument('--data_path', type=str, required=True, help='Path to results JSON file')
 # parser.add_argument('--output_path', type=str, required=True, help='Path to save filtered results')
 parser.add_argument('--top_percent', type=float, default=1.0, help='Fraction of top data to keep (e.g., 0.2 for 20%)')
 parser.add_argument('--model_name', type=str, default="Qwen/Qwen3-1.7B", help='Huggingface model name for feature extraction')
 args = parser.parse_args()
-# python filter.py --clf_root "gsm8k_binary_clfs" --file_path "Meta-Llama-3-8B-Instruct_math_results.json"
+# python filter.py --clf_root "gsm8k_binary_clfs" --data_path "Meta-Llama-3-8B-Instruct_math_results.json"
 
-
-# os.environ["CUDA_VISIBLE_DEVICES"] = "2,3,4,5,6,7"
 
 def load_model_pickle(clf_path="model.pkl"):
     """
@@ -110,7 +108,7 @@ def main():
     model.eval()
 
     # Load results
-    with open(args.file_path, 'r') as f:
+    with open(args.data_path, 'r') as f:
         samples = json.load(f)
         # samples = samples[:100]
 
@@ -150,7 +148,7 @@ def main():
 
     # Save
     model_id = args.model_name.split('/')[1]
-    output_path = args.file_path.replace('.json', f'_{model_id}_{classification}_filtered_ood.json')
+    output_path = args.data_path.replace('.json', f'_{model_id}_{classification}_filtered.json')
     with open(output_path, 'w') as f:
         json.dump(res, f, indent=4)
     print(f"Saved {len(res)} samples to {output_path}")

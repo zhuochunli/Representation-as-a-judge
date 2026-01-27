@@ -9,13 +9,11 @@ import argparse
 import re
 import os
 
-# os.environ["CUDA_VISIBLE_DEVICES"] = "2,3,4,5,6,7"
-
 
 parser = argparse.ArgumentParser(description="directly prompt evaluation",
                                  formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('--model_path', '-m', default='Qwen/Qwen3-1.7B', help='Base model path')
-parser.add_argument('--file_path', default='Meta-Llama-3-8B-Instruct_math_roscoe5dim_probing.json', help="probing file path")
+parser.add_argument('--data_path', default='Meta-Llama-3-8B-Instruct_math_roscoe5dim_probing.json', help="probing file path")
 parser.add_argument('--max_new_tokens', type=int, default=2048,
                     help='Maximum new tokens for generation')
 parser.add_argument('--tensor_parallel_size', type=int, default=2,
@@ -50,9 +48,9 @@ class Sample:
         self.label = label
 
 
-def prompt_binary(dim, file_path):
+def prompt_binary(dim, data_path):
     dataset = []
-    with open(file_path, 'r') as f:
+    with open(data_path, 'r') as f:
         all_data = json.load(f)
         for sample in all_data[dim]:
             dataset.append(Sample(prompt=sample['eval_prompt'], label=1 if sample['score']>3 else 0))
@@ -108,9 +106,9 @@ def prompt_binary(dim, file_path):
     # with open('qwen1.7b_math_socreval_eval.json', 'w') as f:
     #     json.dump(res, f, indent=4)
 
-def prompt_multi(dim, file_path):
+def prompt_multi(dim, data_path):
     dataset = []
-    with open(file_path, 'r') as f:
+    with open(data_path, 'r') as f:
         all_data = json.load(f)
         for sample in all_data[dim]:
             dataset.append(Sample(prompt=sample['eval_prompt'], label=sample['score']))
@@ -161,6 +159,6 @@ def prompt_multi(dim, file_path):
     #     json.dump(res, f, indent=4)
 
 for dim in ['semantic_consistency', 'logicality', 'informativeness', 'fluency', 'factuality']:
-    prompt_multi(dim, args.file_path)
+    prompt_multi(dim, args.data_path)
     print("--------------------------------")
-    prompt_binary(dim, args.file_path)
+    prompt_binary(dim, args.data_path)

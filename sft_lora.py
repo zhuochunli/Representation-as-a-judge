@@ -14,7 +14,7 @@ import wandb
 
 
 parser = argparse.ArgumentParser(description='SFT for LLMs with LoRA.')
-parser.add_argument('--model_name', type=str, default="meta-llama/Llama-2-7b-chat-hf", help='Model name or path')
+parser.add_argument('--model_path', type=str, default="meta-llama/Llama-2-7b-chat-hf", help='Model name or path')
 parser.add_argument('--data_path', type=str, default="Meta-Llama-3-8B-Instruct_gsm8k_results_Qwen3-1.7B_binary_filtered.json", help='Path to filtered JSON data')
 parser.add_argument('--dataset', default='gsm8k', choices=['gsm8k', 'math', 'gpqa'], help="Dataset for evaluation")
 parser.add_argument('--output_dir', type=str, default="checkpoints/Llama-2-7b-chat-hf_gsm8k_Qwen3-1.7B_top10", help='Directory to save the trained model')
@@ -35,7 +35,7 @@ args = parser.parse_args()
 # python sft_lora.py --data_path "Meta-Llama-3-8B-Instruct_gsm8k_results_Qwen3-1.7B_binary_filtered.json" --dataset "gsm8k" --output_dir "checkpoints/Llama-2-7b-chat-hf_gsm8k_Qwen3-1.7B_top10" --select "top" --percent 0.1
 
 os.environ["WANDB_PROJECT"] = "pingan-evaluation"
-wandb.login(key="[your wandb key]")
+wandb.login(key="0f3dc9485e521a91e13546fa2d28f64b2f5aa8e9")
 wandb.init(name=args.output_dir)
 
 class QADataset(torch.utils.data.Dataset):
@@ -105,11 +105,11 @@ def main():
     print(f"Train: {len(train_samples)}, Val: {len(val_samples)}")
 
     # Load tokenizer/model
-    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_path)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     model = AutoModelForCausalLM.from_pretrained(
-        args.model_name, 
+        args.model_path, 
         device_map="auto",
         torch_dtype=torch.float16,  # Use half precision for memory efficiency
         )

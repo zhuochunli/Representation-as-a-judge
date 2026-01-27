@@ -12,22 +12,21 @@ from peft import PeftModel
 import tempfile
 import shutil
 
-# os.environ["CUDA_VISIBLE_DEVICES"] = "2,3,4,5,6,7"
 
-
-# parser = argparse.ArgumentParser(description="directly prompt evaluation",
-#                                  formatter_class=argparse.RawTextHelpFormatter)
-# parser.add_argument('--model_path', '-m', default='Qwen/Qwen3-1.7B', help='Base model path')
-# parser.add_argument('--lora_path', type=str, default=None, help='Path to LoRA adapters (if using LoRA model)')
-# parser.add_argument('--file_path', default='Meta-Llama-3-8B-Instruct_math_roscoe5dim_probing.json', help="probing file path")
-# parser.add_argument('--max_new_tokens', type=int, default=2048,
-#                     help='Maximum new tokens for generation')
-# parser.add_argument('--tensor_parallel_size', type=int, default=2,
-#                     help='Number of GPUs to use for tensor parallelism')
-# parser.add_argument('--gpu_memory_utilization', type=float, default=0.9,
-#                     help='GPU memory utilization ratio')
-# args = parser.parse_args()
-
+parser = argparse.ArgumentParser(description="directly prompt evaluation on tuning_lora.py",
+                                 formatter_class=argparse.RawTextHelpFormatter)
+parser.add_argument('--model_path', '-m', default='Qwen/Qwen3-1.7B', help='Base model path')
+parser.add_argument('--lora_path', type=str, default=None, help='Path to LoRA adapters (if using LoRA model)')
+parser.add_argument('--data_path', default='Meta-Llama-3-8B-Instruct_math_roscoe5dim_probing.json', help="probing file path")
+parser.add_argument('--aspect', default='semantic_consistency', choices=['semantic_consistency', 'logicality', 'informativeness','fluency','factuality'], help="Aspects for evaluation")
+parser.add_argument('--classes', default='multi', choices=['multi','binary'], help="Classes for evaluation")
+parser.add_argument('--max_new_tokens', type=int, default=2048,
+                    help='Maximum new tokens for generation')
+parser.add_argument('--tensor_parallel_size', type=int, default=2,
+                    help='Number of GPUs to use for tensor parallelism')
+parser.add_argument('--gpu_memory_utilization', type=float, default=0.9,
+                    help='GPU memory utilization ratio')
+args = parser.parse_args()
 
 
 # For socreval
@@ -64,7 +63,7 @@ def prompt_binary(dim, file_path, model_path, lora_path=None):
     # Initialize vLLM model
     llm = LLM(
         model=vllm_path,    # meta-llama/Llama-3.2-1B-Instruct
-        tensor_parallel_size=4,  # Adjust based on your GPU setup
+        tensor_parallel_size=2,  # Adjust based on your GPU setup
         gpu_memory_utilization=0.9,  # Use 90% of GPU memory
         max_model_len=32768,  # Match your original max_new_tokens context
         trust_remote_code=True,  # Required for some models
@@ -221,11 +220,12 @@ def prompt_multi(dim, file_path, model_path, lora_path):
 
 
 if __name__ == "__main__":
-    model_path = 'Qwen/Qwen3-0.6B'
-    file_path = "Meta-Llama-3-8B-Instruct_gpqa_roscoe5dim_probing.json"
+    model_path = args.model_path
+    file_path = args.file_path
+    lora_path = args.lora_path
     for dim in ['semantic_consistency', 'logicality', 'informativeness', 'fluency', 'factuality']:
-        lora_path = f"checkpoints/Qwen3-0.6B_gpqa_{dim}_multi"
+        lora_path = f"checkpoints/Qwen3-0.6B_alpaca2_{dim}_multi"
         prompt_multi(dim, file_path, model_path, lora_path)
         print("--------------------------------")
-        lora_path = f"checkpoints/Qwen3-0.6B_gpqa_{dim}_binary"
+        lora_path = f"checkpoints/Qwen3-0.6B_alpaca2_{dim}_binary"
         prompt_binary(dim, file_path, model_path, lora_path)
