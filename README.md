@@ -7,7 +7,7 @@ Repo for the paper: "[Rethinking LLM-as-a-Judge: Representation-as-a-Judge with 
 
 
 ## Before You Start
-This repository aims to provide a plug-and-play reliable evaluators for reasoning questions and predictions pairs(reference-free), and to reproduce our paper's work. Since our work is based on public models, datasets and HuggingFace, it is **easy to scale and adapt**. Feel free to scale out for your own tasks!
+This repository aims to provide a plug-and-play reliable evaluators for **reasoning question and prediction pairs(reference-free)**, and to reproduce our paper's work. Since our work is based on public models, datasets and HuggingFace, it is **easy to scale and adapt**. Feel free to scale out for your own tasks!
 
 - Baselines: RoBERTa
 - Small Language models: Qwen3-0.6B, Qwen3-1.7B, Llama-3.2-1B-Instruct, Llama-3.1-8B-Instruct
@@ -34,7 +34,7 @@ The classifiers are based on **Qwen3-1.7B and scikit-learn**, please make sure y
 
 For each pair, **multiclass classifier will rate 1-5 score** for each aspect, and **binary classifier will rate 0/1 (low quality/high quality) score** for each aspect.
 
-The evaluated results will add scores of these 5 aspects in the dict, and key `"total_score"` to sum up all scores. You can also specify `--top_percent` (defualt=1) to filter data based on the top perecent quality data based on the `"total_score"`.
+The evaluated results will add scores of these 5 aspects in the dict, and key `"total_score"` to sum up all scores. You can also specify `--top_percent` (defualt=1) to filter top perecent quality data based on `"total_score"`.
 
 We support 2 input formats (but the dict must contain keys `"question"` and `"prediction"`):
 
@@ -187,15 +187,17 @@ python test_vllm.py \
 ## Citation
 If you find this work helpful, we would appreciate it if you could cite it!
 ```bibtex
-@inproceedings{
-anonymous2026rethinking,
-title={Rethinking {LLM}-as-a-Judge: Representation-as-a-Judge with Small Language Models via Semantic Capacity Asymmetry},
-author={Anonymous},
-booktitle={The Fourteenth International Conference on Learning Representations},
-year={2026},
-url={https://openreview.net/forum?id=VAISvCsrvG}
+@misc{li2026rethinkingllmasajudgerepresentationasajudgesmall,
+      title={Rethinking LLM-as-a-Judge: Representation-as-a-Judge with Small Language Models via Semantic Capacity Asymmetry}, 
+      author={Zhuochun Li and Yong Zhang and Ming Li and Yuelyu Ji and Yiming Zeng and Ning Cheng and Yun Zhu and Yanmeng Wang and Shaojun Wang and Jing Xiao and Daqing He},
+      year={2026},
+      eprint={2601.22588},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2601.22588}, 
 }
 ```
 
 
 <!-- [![Star History Chart](https://api.star-history.com/svg?repos=zhuochunli/Representaion-as-a-judge&type=Date)](https://star-history.com/#zhuochunli/Representaion-as-a-judge&Date) -->
+
